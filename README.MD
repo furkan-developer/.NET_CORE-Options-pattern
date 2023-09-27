@@ -6,3 +6,9 @@ Ayrıca Options Pattern uygulama ayarlarını **doğrulamak** için bir mekanizm
 ## By using Configuration.Bind or Configuration.Get<T>
 Her iki extension metot sayesinde JSON yapılandırma dosyasından (appsettings.json) uygulama ayarları okunabilir. Ayrıca uygulama ayağa kaldırıldıktan sonra appsettings.json dosyasında güncellenen ayarlarda okunabilir.
 
+## By IOptions<T> interface
+Bu arayüz sayesinde appsettings.json dosyasından uygulama ayarları okunur ve **dependency injection service container'a** ayarların bağlandığı sınıf kaydedilir. Bu sayede daha sonra uygulamanın herhangi bir bileşeninde DI' dan talep edilip kullanılabilir.
+
+Uygulama ayağa kaldırıldıktan sonra appsettings.json dosyasında güncellenen uygulama ayarları okunamaz. Güncellenen uygulama ayarlarının okunabilmesi için **IOptionsSnapshot** veya **IOptionsMonitor** arayüzleri kullanılır.
+
+### Read updated configuration settings

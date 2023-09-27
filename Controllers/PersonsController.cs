@@ -12,22 +12,16 @@ namespace OptionsPattern.Controllers
     [Route("api/[controller]")]
     public class PersonsController : ControllerBase
     {
-        private readonly IConfiguration _config;
-
-        public PersonsController(IConfiguration config)
+        private readonly IOptions<PersonOptions> _personOptions;
+        public PersonsController(IOptions<PersonOptions> personOptions)
         {
-            _config = config;
+            _personOptions = personOptions;
         }
 
         [HttpGet]
         public IActionResult GetPersonOptions()
         {
-            // var personOptions = new PersonOptions();
-            // _config.GetSection(PersonOptions.Person).Bind(personOptions);
-
-            var personOptions = _config.GetSection(PersonOptions.Person).Get<PersonOptions>();
-
-            return Ok(personOptions);
+           return Ok(_personOptions.Value);
         }
     }
 }
