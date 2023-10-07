@@ -21,7 +21,21 @@ namespace OptionsPattern.Controllers
         [HttpGet]
         public IActionResult GetPersonOptions()
         {
-           return Ok(_personOptions.Value);
+            PersonOptions personOptions;
+            try
+            {
+                personOptions = _personOptions.Value;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            // catch (OptionsValidationException optValEx)
+            // {
+            //     return BadRequest(optValEx.Message);
+            // }
+
+            return Ok(_personOptions.Value);
         }
     }
 }

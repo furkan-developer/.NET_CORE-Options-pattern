@@ -20,3 +20,69 @@ Uygulama ayağa kalktıktan sonra appsettings.json dosyasından güncellenen bir
     - Özellikle **Singleton** yaşam döngüsüne sahip nesneler için tasarlanmıştır. 
 * IOptionsSnapshot, bir **Scoped** servisdir. IOptionsSnapshot<T> nesnesi IoC container dan istendiğinde JSON yapılandırma dosyasındaki verinin anlık görüntüsünü alır ve nesne yaşam döngüsü boyunca bu veriler ile çalışır. Bu yüzden bu arayüz her request' te JSON yapılandırma dosyasındaki verilerin tekrar okunmasını gerektiren senaryolarda kullanılması yararlıdır. Aksi bir durum söz konusu ise bu uygulamanın maliyetini arttırır. Çünkü her request oluştuğunda .json uzantılı bir dosya okunması gerekir. 
     - **Transient** ve **Scoped** yaşam döngüsüne sahip nesneler için tasarlanmıştır.
+
+## Options validation
+ASP.NET Core Options pattern, JSON yapılandırma dosyasından okunan veriler için bir doğrulama mekanizması destekler. Bu mekanizmayı kullanabilmek için program.cs de Options pattern yapılandırması ayarlanır iken **ValidationDataAnnotations** fonksiyonun çağrılması yeterli olacaktır. 
+
+**Not:** Options pattern doğrulama hataları için built-in **OptionsValidationException** tipi kullanılabilir.
+
+```csharp
+// Program.cs
+builder.Services.AddOptions<PersonOptions>()
+    .Bind(builder.Configuration.GetSection(PersonOptions.Person))
+    // Enables validation
+    .ValidateDataAnnotations();
+```
+
+```csharp
+// PersonOptions.cs
+public class PersonOptions
+    {
+        public const string Person = "Person";
+
+        // Validation rule
+        [MaxLength(10,ErrorMessage = "Name's max lenght should be 10)]
+        public string Name { get; set; }
+        public string SurName { get; set; }
+    }
+```
+
+```csharp
+[HttpGet]
+public IActionResult GetPersonOptions()
+{
+    PersonOptions personOptions;
+    try
+    {
+        // _personOptions is used here for taking PersonOptions object from DI container
+        personOptions = _personOptions.Value;
+    }
+    catch (Exception ex)
+    {
+        return BadRequest(ex.Message);
+    }
+    // catch (OptionsValidationException optValEx)
+    // {
+    //     return BadRequest(optValEx.Message);
+    // }
+
+    return Ok(_personOptions.Value);
+}
+```
+
+### Complex validation rules
+**Validate** fonksiyonu ile complex doğrulama kuralları oluşturulabilir.
+
+```csharp 
+builder.Services.AddOptions<PersonOptions>()
+    .Bind(builder.Configuration.GetSection(PersonOptions.Person))
+    .ValidateDataAnnotations()
+    .Validate((personOptions) =>
+    {
+        // do something
+        string name = personOptions.Name.ToLower();
+        if(name.Equals("furkan"))
+            return personOptions.SurName.ToLower() == "aydın" ? true : false;  
+        return true;  
+    },"Should be equal surname property to 'aydın' when name propery was 'furkan'");
+```
