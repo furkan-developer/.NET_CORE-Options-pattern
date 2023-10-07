@@ -119,3 +119,10 @@ builder.Services.Configure<PersonOptions>(builder.Configuration.GetSection(Perso
 builder.Services.AddSingleton<IValidateOptions<PersonOptions>, PersonOptionsValidation>();
 ``` 
 
+## Acces options in Program.cs
+Program.cs dosyasında **IOptions<>** veya **IOptionsMonitor<>** arayüzleri kullanılarak JSON yapılandırma dosyasındaki veriler aşağıdaki gibi ulaşılabilir.
+
+```csharp
+var name = app.Services.GetRequiredService<IOptionsMonitor<PersonOptions>>().CurrentValue.Name;
+```
+
