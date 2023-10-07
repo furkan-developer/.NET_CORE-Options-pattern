@@ -21,6 +21,11 @@ Uygulama ayağa kalktıktan sonra appsettings.json dosyasından güncellenen bir
 * IOptionsSnapshot, bir **Scoped** servisdir. IOptionsSnapshot<T> nesnesi IoC container dan istendiğinde JSON yapılandırma dosyasındaki verinin anlık görüntüsünü alır ve nesne yaşam döngüsü boyunca bu veriler ile çalışır. Bu yüzden bu arayüz her request' te JSON yapılandırma dosyasındaki verilerin tekrar okunmasını gerektiren senaryolarda kullanılması yararlıdır. Aksi bir durum söz konusu ise bu uygulamanın maliyetini arttırır. Çünkü her request oluştuğunda .json uzantılı bir dosya okunması gerekir. 
     - **Transient** ve **Scoped** yaşam döngüsüne sahip nesneler için tasarlanmıştır.
 
+## When to use IOptions<>, IOptionsSnapshot<> and IOptionsMonitor<>?
+* IOptions<>, uygulama ayağa kaldırıldıktan sonra yapılandırma ayarlarının değişmeyeceği bekleniyor ise kullanılır.
+* IOptionsSnapshot<>, uygulama ayağa kaldırıldıktan sonra yapılandırma ayarlarının değişeceği bekleniyor ve her request oluştuğunda JSON yapılandırma dosyasından ayarların tekrar okunması isteniyor ise kullanılır.
+* IOptionsMonitor<>,  yapılandırma ayarlarının gerçek zamanlı (real-time) okunması isteniyor ise kullanılır.
+
 ## Options validation
 ASP.NET Core Options pattern, JSON yapılandırma dosyasından okunan veriler için bir doğrulama mekanizması destekler. Bu mekanizmayı kullanabilmek için program.cs de Options pattern yapılandırması ayarlanır iken **ValidationDataAnnotations** fonksiyonun çağrılması yeterli olacaktır. 
 
