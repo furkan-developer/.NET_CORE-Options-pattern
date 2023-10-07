@@ -86,3 +86,36 @@ builder.Services.AddOptions<PersonOptions>()
         return true;  
     },"Should be equal surname property to 'aydın' when name propery was 'furkan'");
 ```
+
+**Not:** Program.cs dosyasında oluşturulan doğrulama kodlarını bir sınıf içerisine taşıyabilmek için ilgili sınıfın **IValidateOptions<>** arayüzünden implementasyon alması gerekir.
+
+```csharp
+public class PersonOptionsValidation : IValidateOptions<PersonOptions>
+{
+    private readonly PersonOptions _personOptions;
+
+    public PersonOptionsValidation(IConfiguration configuration)
+    {
+        _personOptions = configuration.GetSection(PersonOptions.Person).Get<PersonOptions>();
+    }
+
+    public ValidateOptionsResult Validate(string name, PersonOptions options)
+    {
+        string errorMessages = null;
+        
+        // use _personOptions for validating PersonOptions properties
+
+        if(errorMessages != null)
+            return ValidateOptionsResult.Fail(errorMessages);
+
+        return ValidateOptionsResult.Success;
+    }
+}
+```
+
+```csharp
+// Program.cs
+builder.Services.Configure<PersonOptions>(builder.Configuration.GetSection(PersonOptions.Person));
+builder.Services.AddSingleton<IValidateOptions<PersonOptions>, PersonOptionsValidation>();
+``` 
+
