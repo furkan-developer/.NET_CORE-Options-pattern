@@ -131,3 +131,6 @@ Program.cs dosyasında **IOptions<>** veya **IOptionsMonitor<>** arayüzleri kul
 var name = app.Services.GetRequiredService<IOptionsMonitor<PersonOptions>>().CurrentValue.Name;
 ```
 
+## Kaynak
+* https://learn.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-7.0#use-di-services-to-configure-options
+
