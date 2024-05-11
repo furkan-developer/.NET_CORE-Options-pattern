@@ -134,3 +134,7 @@ var name = app.Services.GetRequiredService<IOptionsMonitor<PersonOptions>>().Cur
 ## Kaynak
 * https://learn.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-7.0#use-di-services-to-configure-options
 
+## Incele
+https://dev.to/ahmedshahjr/series/23253
+
+
